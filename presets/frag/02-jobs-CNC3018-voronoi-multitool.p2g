@@ -1,0 +1,23 @@
+# The job section defines how the toolpaths are generated.
+# Names don't matter, but must be unique.
+jobs:
+  bottom:
+    type: voronoi                # Isolate only where needed, keeping tool farthest from traces.
+    extend: 0.5                  # Extend 0.5mm beyond board outline
+    inputs:                      # "voronoi" requires "copper" and "outline" inputs.
+      - copper:  bottom
+      - outline: outline
+    tools:
+      - I0254                    # Muultiple tools are provided, each trace uses the largest one
+      - I1000                    # that fits it's position.
+
+  top:
+    type: voronoi                # Isolate only where needed, keeping tool farthest from traces.
+    extend: 0.5                  # Extend 0.5mm beyond board outline
+    inputs:                      # "voronoi" requires "copper" and "outline" inputs.
+      - copper:  top
+      - outline: outline
+    tools:
+      - I0254                    # Muultiple tools are provided, each trace uses the largest one
+      - I1000                    # that fits it's position.
+

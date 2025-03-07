@@ -1,0 +1,48 @@
+# The job section defines how the toolpaths are generated.
+# Names don't matter, but must be unique.
+jobs:
+  bottom:                        # Fine isolation using voronoi toolpaths
+    type: voronoi
+    extend: 0.5
+    inputs:
+      - copper:  bottom
+      - outline: outline
+      - mask:    bottom          # Limit toolpaths to within 2.0mm of copper traces
+        dilate:  2.0
+    tools:
+      - I0254                    # Multiple tools are provided, each trace uses the largest one
+
+  bottom-bulk:                   # Bulk isolation using normal toolpaths
+    type: isolate
+    inputs:
+      - copper:  bottom          # Bulk tool is not good for finishing, leave extra 0.1mm.
+        dilate:  0.1
+      - outline: outline
+    tools:
+      - I0800                    # First pass
+      - I2000                    # high-bulk
+#      - I1200                    # mid-bulk
+      - I0800                    # Remainder details
+
+  top:                           # Fine isolation using voronoi toolpaths
+    type: voronoi
+    extend: 0.5
+    inputs:
+      - copper:  top
+      - outline: outline
+      - mask:    top             # Limit toolpaths to within 2.0mm of copper traces
+        dilate:  2.0
+    tools:
+      - I0254                    # Multiple tools are provided, each trace uses the largest one
+
+  top-bulk:                      # Bulk isolation using normal toolpaths
+    type: isolate
+    inputs:
+      - copper:  top             # Bulk tool is not good for finishing, leave extra 0.1mm.
+        dilate:  0.1
+      - outline: outline
+    tools:
+      - I0800                    # First pass
+      - I2000                    # high-bulk
+#      - I1200                    # mid-bulk
+      - I0800                    # Remainder details

@@ -1,0 +1,97 @@
+# The outputs section controls how to generate files from the toolpaths.
+# Any number of files can be generated combining toolpaths from all jobs.
+# In this example, one file is generated for each tool and side.
+outputs:
+  # Preview images are useful for inspection
+  - file: 01-preview-top.png
+    type: preview
+    side: top
+    paths:
+      - { job: top      }
+      - { job: top-bulk }
+      - { job: text-top }
+      - { job: drill    }
+      - { job: slots    }
+      - { job: cutout   }
+      - { job: alignment_holes   }
+
+  - file: 02-preview-bottom.png
+    type: preview
+    side: bottom
+    paths:                               # Almost all are visible from the bottom, so...
+      - { job: bottom      }             # A few jobs are visible from the top side
+      - { job: bottom-bulk }
+      - { job: text-bottom }
+      - { job: drill    }
+      - { job: slots    }
+      - { job: cutout   }
+      - { job: alignment_holes   }
+
+  # Note that all files exported here are see-through from the bottom side. RoutePro 3000 will flip if needed.
+
+  # Top-side, alignment_holes:
+  - file: CNC3018-00-top_alignment_holes-drill-1.0mm.gcode
+    side: top
+    paths:
+      - { job: alignment_holes, tool: D1000 }
+
+  # Top-side, isolation:
+  - file: CNC3018-01-top-mill-0.254mm.gcode
+    side: top
+    paths:
+      - { job: top,         tool: I0254 }
+      - { job: text-top,    tool: I0254 }
+
+  - file: CNC3018-02-top-mill-1.0mm.gcode
+    side: top
+    paths:
+      - { job: top,         tool: I1000 }
+      - { job: top-bulk,    tool: I1000 }
+
+  # Bottom-side, isolation:
+  - file: CNC3018-10-bottom-mill-0.254mm.gcode
+    side: bottom
+    paths:
+      - { job: bottom,      tool: I0254 }
+      - { job: text-bottom, tool: I0254 }
+      - { job: drill,       tool: I0254 }  # Fine tools may have predrills
+
+  - file: CNC3018-20-drill-0.45mm.gcode
+    side: bottom
+    paths:
+      - { tool: D0450 }
+
+  - file: CNC3018-21-drill-0.60mm.gcode
+    side: bottom
+    paths:
+      - { tool: D0600 }
+
+  - file: CNC3018-22-drill-0.70mm.gcode
+    side: bottom
+    paths:
+      - { tool: D0700 }
+
+  - file: CNC3018-23-drill-0.80mm.gcode
+    side: bottom
+    paths:
+      - { tool: D0800 }
+
+  - file: CNC3018-24-drill-0.90mm.gcode
+    side: bottom
+    paths:
+      - { tool: D0900 }
+
+  - file: CNC3018-25-drill-1.00mm.gcode
+    side: bottom
+    paths:
+      - { tool: D1000 }
+
+  # The same 1mm endmill is used for isolation, mill-drills, slotting and cutout.
+  - file: CNC3018-30-bottom-mill-1.0mm.gcode
+    side: bottom
+    paths:
+      - { job: bottom,      tool: I1000 }
+      - { job: bottom-bulk, tool: I1000 }
+      - { job: drill,       tool: M1000 }
+      - { job: slots,       tool: M1000 }
+      - { job: cutout,      tool: M1000 }

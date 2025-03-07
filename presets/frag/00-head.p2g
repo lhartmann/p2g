@@ -1,0 +1,29 @@
+# Gerber Import resolution in pixels/mm.
+# A good rule of thumb is having 25 pixels for your smallest feature (tool or trace).
+ppmm: 100
+#margin: 4
+
+# Generates debug images along the process.
+# debug: true
+
+#export-options:
+#  replicate:
+#    rows: 3
+#    cols: 1
+#  rotate: 90
+#  translate:
+#    zero: lower-left
+
+# These are the input layers to be used.
+# Layer names don't matter, but must be unique.
+# If any layer is not available, then jobs depending on it are simply skipped.
+inputs:
+  top:         top.gbr
+  bottom:      bottom.gbr
+  outline:     outline.gbr
+  drill-npth:  drill-npth.drl
+  drill-pth:   drill-pth.drl
+  tabs:        tabs.gbr
+  text-top:    text-top.gbr
+  text-bottom: text-bottom.gbr
+  slots:       slots.gbr

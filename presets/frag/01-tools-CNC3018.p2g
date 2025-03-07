@@ -1,0 +1,79 @@
+# Define all the tool you have in this section. Later you can choose which ones to use.
+# Tool names don't matter, but must be unique.
+# There is still no "import" feature, so you must specify all your tools here.
+tools:
+  defaultmill:                   # Template for other mills.
+    description: Default mill
+    type:        mill
+    diameter:    1.00            # Diameter (mm)
+    depth:       0.10            # How deep the final cut should be?
+    infeed:      0.75            # How deep each pass should be?
+    speed:       12000           # Spindle speed, RPM
+    feed:        120             # Horizontal feed (mm/min)
+    plunge:      240             # Vertical feed while going down (mm/min)
+    runs:        50              # Maximum number of contours (not passes)
+    overlap:     0.1
+
+  defaultdrill:                  # Template for other mills.
+    description: Default Drill
+    type:        drill
+    diameter:    1.0
+    depth:       2.1
+    infeed:      2.1             # For pecking, set less than depth
+    speed:       12000
+    plunge:      240
+
+  I0200:
+    like:        defaultmill     # Inherit from default mill, then replace some properties.
+    description: Isolation milling tool, d=0.200mm
+    diameter:    0.200
+
+  I0254:
+    like:        defaultmill
+    description: Isolation milling tool, d=0.254mm
+    diameter:    0.254
+
+  I0300:
+    like:        defaultmill
+    description: Isolation milling tool, d=0.300mm
+    diameter:    0.300
+
+  I1000:
+    like:        defaultmill
+    description: Isolation milling tool, d=1.00mm
+    diameter:    1.00
+    depth:       0.20            # How deep the final cut should be?
+    feed:        240
+
+  M1000:                         # Same tool as I1000, but used to cut through.
+    like:        I1000
+    description: Contour milling tool, d=1.00mm
+    depth:       2.1
+    predrill:    D1000           # Mills are not good for drilling, use a predrill on the plunge point.
+
+  D0450:
+    like:        defaultdrill
+    description: Drill 0.45mm
+    diameter:    0.45
+    predrill:    I0254           # Fine drill, add a marking while running isolation.
+
+  D0700:
+    like:        defaultdrill
+    description: Drill 0.70mm
+    diameter:    0.70
+    predrill:    I0254           # Fine drill, add a marking while running isolation.
+
+  D0800:
+    like:        defaultdrill
+    description: Drill 0.80mm
+    diameter:    0.80
+
+  D0900:
+    like:        defaultdrill
+    description: Drill 0.90mm
+    diameter:    0.90
+
+  D1000:
+    like:        defaultdrill
+    description: Drill 1.00mm
+    diameter:    1.00

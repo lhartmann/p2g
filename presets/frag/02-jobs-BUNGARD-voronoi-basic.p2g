@@ -1,0 +1,20 @@
+# The job section defines how the toolpaths are generated.
+# Names don't matter, but must be unique.
+jobs:
+  bottom:                   # Fine isolation using voronoi toolpaths
+    type: voronoi
+    extend: 0.5
+    inputs:
+      - copper:  bottom
+      - outline: outline
+    tools:
+      - I0254                    # Multiple tools are provided, each trace uses the largest one
+
+  top:                      # Fine isolation using voronoi toolpaths
+    type: voronoi
+    extend: 0.5
+    inputs:
+      - copper:  top
+      - outline: outline
+    tools:
+      - I0254                    # Multiple tools are provided, each trace uses the largest one

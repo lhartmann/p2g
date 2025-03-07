@@ -1,0 +1,58 @@
+# Drill, text, slots and cutout are common to all insulation strategies.
+
+#jobs:
+  drill:
+    type: drill                  # "drill" jobs also do mill-drills
+    priority: 1000               # Priority added to toolpaths from this job. Lower numbers executed first.
+    inputs:                      # Drill jobs only need a "drill" input
+      - drill:   drill-pth
+      - drill:   drill-npth      # But you can repeat to cobine multiple files.
+    tools:                       # Tools to use, sorted by diameter.
+      - D0450
+      - D0700
+      - D0800
+      - D0900
+      - D1000
+      - M1000                    # You can add a mill last, for larger holes and slots
+
+  text-top:                   # Paint jobs fill areas. Usefull for text engraving.
+    type: paint
+    inputs:
+      - area: text-top
+    tools:
+      - I0254
+
+  text-bottom:                   # Paint jobs fill areas. Usefull for text engraving.
+    type: paint
+    inputs:
+      - area: text-bottom
+    tools:
+      - I0254
+
+  slots:                         # HV isolation slots may also be created with "paint" jobs,
+    type: paint
+    priority: 1500               # After "drill", before "cutout".
+    inputs:
+      - area: slots
+    tools:
+      - M1000
+
+  cutout:
+    type: cutout                 # "cutout" jobs will do inside and outside cuts.
+    priority: 2000               # After those from "drill" ansd "slots".
+                                 # Outter contours will have incremented priority, so as to run
+                                 # after their inner contours. This is why priorities were chosen
+                                 # to be 1000,1500,2000, and not 1,2,3.
+    inputs:                      # Only an "outline" input is required.
+      - outline: outline         # Make sure the outline is closed. Nesting is OK.
+      - tabs:    tabs            # 'tabs' are optional. Positive prevents cutout.
+    tools:
+      - M1000                    # Only a single tool is allowed, but it may require and
+                                 # generate predrills as specified in the "tools" section.
+
+  alignment_holes:
+    type: alignment_holes
+    inputs:
+      - outline: outline
+    tools:
+      - D1000

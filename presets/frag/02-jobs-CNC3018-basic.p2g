@@ -1,0 +1,23 @@
+# The job section defines how the toolpaths are generated.
+# Names don't matter, but must be unique.
+jobs:
+  bottom:
+    type: isolate                # "isolate" jobs will clear all the copper, unless stopped by the runs limit of the tools.
+    inputs:                      # "isolate" requires "copper" and "outline" inputs.
+      - copper:  bottom          # For copper, use "bottom" from input section.
+      - outline: outline         # Copper removal is limited to the board outline + largest tool diameter.
+      - drill:   drill-pth       # "drill" is optional, and removes copper from the holes.
+      - drill:   drill-npth      # Repeated inputs get added together, usefull for joining plated and non-plated holes.                               
+    tools:                       # List of tools to use on the job. Sort as: primary, BIG, medium, ..., small
+      - I0254                    # Primary tool does a single contour around all traces.
+
+  top:
+    type: isolate                # "isolate" jobs will clear all the copper, unless stopped by the runs limit of the tools.
+    inputs:                      # "isolate" requires "copper" and "outline" inputs.
+      - copper:  top             # For copper, use "bottom" from input section.
+      - outline: outline         # same...
+      - drill:   drill-pth       # "drill" is optional, and removes copper from the holes.
+      - drill:   drill-npth      # Repeated inputs get added together, usefull for joining plated and non-plated holes.
+    tools:                       # List of tools to use on the job. Sort as: primary, BIG, medium, ..., small
+      - I0254                    # Primary tool does a single contour around all traces.
+

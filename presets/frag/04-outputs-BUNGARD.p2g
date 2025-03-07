@@ -1,0 +1,111 @@
+# The outputs section controls how to generate files from the toolpaths.
+# Any number of files can be generated combining toolpaths from all jobs.
+# In this example, one file is generated for each tool and side.
+outputs:
+  # Preview images are useful for inspection
+  - file: 01-preview-top.png
+    type: preview
+    side: top
+    paths:
+      - { job: top      }
+      - { job: top-bulk }
+      - { job: text-top }
+      - { job: drill    }
+      - { job: slots    }
+      - { job: cutout   }
+
+  - file: 02-preview-bottom.png
+    type: preview
+    side: bottom
+    paths:                               # Almost all are visible from the bottom, so...
+      - { job: bottom      }             # A few jobs are visible from the top side
+      - { job: bottom-bulk }
+      - { job: text-bottom }
+      - { job: drill    }
+      - { job: slots    }
+      - { job: cutout   }
+
+  ####################################################
+  # HPGL and NCDRILL outputs for bungard CNC (alpha) #
+  ####################################################
+  # Note that all files exported here are see-through from the bottom side. RoutePro 3000 will flip if needed.
+
+  # Top-side, isolation:
+  - file: Bungard-01-top-mill-0.254mm.plt
+    type: hpgl
+    side: top
+    paths:
+      - { job: top,         tool: I0254 }
+  - file: Bungard-02-top-mill-0.8mm.plt
+    type: hpgl
+    side: top
+    paths:
+      - { job: top,         tool: I0800 }
+      - { job: top-bulk,    tool: I0800 }
+  - file: Bungard-03-top-mill-1.2mm.plt
+    type: hpgl
+    side: top
+    paths:
+      - { job: top,         tool: I1200 }
+      - { job: top-bulk,    tool: I1200 }
+  - file: Bungard-04-top-mill-2.0mm.plt
+    type: hpgl
+    side: top
+    paths:
+      - { job: top,         tool: I2000 }
+      - { job: top-bulk,    tool: I2000 }
+
+  # Bottom-side, isolation:
+  - file: Bungard-10-bottom-mill-0.254mm.plt
+    type: hpgl
+    side: bottom
+    paths:
+      - { job: bottom,      tool: I0254 }
+  - file: Bungard-11-bottom-mill-0.8mm.plt
+    type: hpgl
+    side: bottom
+    paths:
+      - { job: bottom,      tool: I0800 }
+      - { job: bottom-bulk, tool: I0800 }
+  - file: Bungard-12-bottom-mill-1.2mm.plt
+    type: hpgl
+    side: bottom
+    paths:
+      - { job: bottom,      tool: I1200 }
+      - { job: bottom-bulk, tool: I1200 }
+  - file: Bungard-13-bottom-mill-2.0mm.plt
+    type: hpgl
+    side: bottom
+    paths:
+      - { job: bottom,      tool: I2000 }
+      - { job: bottom-bulk, tool: I2000 }
+
+  - file: Bungard-20-drills.nc
+    type: ncdrill
+    side: bottom
+    paths:
+      - { tool: D0600 }
+      - { tool: D0700 }
+      - { tool: D0800 }
+      - { tool: D0900 }
+      - { tool: D1000 }
+      - { tool: D1100 }
+      - { tool: D1200 }
+      - { tool: D1500 }
+      - { tool: D2000 }
+      - { tool: D2500 }
+      - { tool: D3000 }
+
+  # Large drills, internal slots and cutouts.
+  - file: Bungard-21-through-mill-2.0mm.plt
+    type: hpgl
+    side: bottom
+    paths:
+      - { tool: M2000 }
+
+  # Large drills, internal slots and cutouts.
+  - file: Bungard-22-through-mill-3.00mm.plt
+    type: hpgl
+    side: bottom
+    paths:
+      - { tool: M3000 }

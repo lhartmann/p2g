@@ -1,0 +1,27 @@
+# The job section defines how the toolpaths are generated.
+# Names don't matter, but must be unique.
+jobs:
+  bottom:                   # Fine isolation using voronoi toolpaths
+    type: isolate
+    inputs:
+      - copper:  bottom
+      - outline: outline
+    tools:
+      - I0254                    # First pass
+      - I2000                    # high-bulk
+#      - I1200                    # mid-bulk
+      - I0800                    # low-bulk
+      - I0254                    # Remainder details
+
+  top:                      # Fine isolation using voronoi toolpaths
+    enabled: false
+    type: isolate
+    inputs:
+      - copper:  top
+      - outline: outline
+    tools:
+      - I0254                    # First pass
+      - I2000                    # high-bulk
+#      - I1200                    # mid-bulk
+      - I0800                    # low-bulk
+      - I0254                    # Remainder details
