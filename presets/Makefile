@@ -13,4 +13,3 @@ CNC3018-%.p2g: frag/00-head.p2g frag/01-tools-CNC3018.p2g frag/02-jobs-CNC3018-%
 
 BUNGARD-%.p2g: frag/00-head.p2g frag/01-tools-BUNGARD.p2g frag/02-jobs-BUNGARD-%.p2g frag/03-jobs-BUNGARD-common.p2g frag/04-outputs-BUNGARD.p2g
 	cat >$@ $^
-
