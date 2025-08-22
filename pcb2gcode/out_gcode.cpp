@@ -101,7 +101,6 @@ std::vector<std::string> out_gcode(context_t &context, const metapaths_t &paths,
     F("G17 ; XY plane");
     F("G94 ; units/minute feed rates");
 //     F("G00 Z%f ; Safe height") % zsafe;
-    F("M3 S10000 ; Tool speed");
 
     bool pen_down = false;
     point_t lastpos(-1,-1);
@@ -111,6 +110,7 @@ std::vector<std::string> out_gcode(context_t &context, const metapaths_t &paths,
         bool backwards = metapath.backwards;
         double depth = 0;
         st.tool = tool;
+        F("M3 S%f ; Tool speed") % tool.speed;
 
         do {
             depth = min(depth + tool.infeed, tool.depth);
