@@ -10,7 +10,7 @@ run: .build
 
 build: .build
 
-.build: Dockerfile p2g.tar.xz entrypoint.sh
+.build: Dockerfile entrypoint.sh
 	${D} build . -t rp2g-server
 	touch .build
 
@@ -20,8 +20,3 @@ clean:
 distclean: clean
 	${D} image rm rp2g-server || true
 	${D} image prune --external -f
-
-export: ${IMAGE}
-
-$(IMAGE): .build
-	${D} image save rp2g-server | xz -T${shell nproc} > ${IMAGE}

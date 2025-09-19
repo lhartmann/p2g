@@ -26,23 +26,11 @@ distclean: clean
 install: p2g
 	install -m 755 p2g ~/.local/bin/p2g
 
-install_html:
-	mkdir -p ~/public_html/p2g 
-	rm -rf ~/public_html/p2g
-	cp -rL html/ ~/public_html/p2g/
-	chmod a+rX,go-w -R ~/public_html/p2g/
-
-.presets: presets/Makefile presets/frag/*
+.presets:
 	make -C presets
 
-docker/p2g.tar.xz: Makefile ${SRCS} ${HDRS} *.ts html/*
-	tar -cJf docker/p2g.tar.xz Makefile ${SRCS} ${HDRS} *.ts presets html
-
-rp2g: docker/p2g.tar.xz
+rp2g:
 	make -C docker build
-
-rp2g-export: rp2g
-	make -C docker export
 
 rp2g-test: rp2g
 	make -C docker run

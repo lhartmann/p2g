@@ -4,7 +4,7 @@
 tools:
   defaultmill:                   # Template for other mills.
     description: Default mill
-    type:        mill
+    type:        mill            # Mills can cut sideways
     diameter:    1.00            # Diameter (mm)
     depth:       0.10            # How deep the final cut should be?
     infeed:      0.75            # How deep each pass should be?
@@ -12,11 +12,11 @@ tools:
     feed:        120             # Horizontal feed (mm/min)
     plunge:      240             # Vertical feed while going down (mm/min)
     runs:        50              # Maximum number of contours (not passes)
-    overlap:     0.1
+    overlap:     0.1             # Fraction of a cut that should be cut again by the next tool path.
 
-  defaultdrill:                  # Template for other mills.
+  defaultdrill:                  # Template for other drills.
     description: Default Drill
-    type:        drill
+    type:        drill           # Drills can only drill
     diameter:    1.0
     depth:       2.1
     infeed:      2.1             # For pecking, set less than depth

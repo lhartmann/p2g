@@ -257,6 +257,7 @@ for (let arg of Deno.args)
 		if (arg.startsWith(`--${a}=`))
 			args[a] = arg.slice(`--${a}=`.length);
 args.webroot = await Deno.realPath(args.webroot);
+console.log("webroot", args.webroot);
 
 /** websocket echo server */
 console.log(`websocket server is running on :${args.port}`);
@@ -282,8 +283,7 @@ Deno.serve({ port: args.port, hostname: "0.0.0.0" }, async (req) => {
 		}
 		try {
 			url = await Deno.realPath(url);
-			console.log("URL...:", url);
-			console.log("ROOT..:", args.webroot);
+			console.log("URL:", url);
 			if (!url.startsWith(args.webroot)) {
 				return new Response("Forbidden", { status: 403 });
 			} else {

@@ -15,6 +15,7 @@ deno --version || {
 
     curl -L $URL | zcat > $DENO
     chmod a+x $DENO
+    deno upgrade
 }
 
 /usr/local/bin/rp2g-server.ts --webroot=/usr/share/rp2g

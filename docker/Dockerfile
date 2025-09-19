@@ -4,17 +4,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Recife
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
-    apt-get install -y curl gerbv libopencv-core406 libopencv-imgproc406 libyaml-cpp0.7 libboost-filesystem1.74.0 libopencv-contrib406 zip && \
+    apt-get install -y curl gerbv libopencv-core410 libopencv-imgproc410 libyaml-cpp0.8 libboost-filesystem1.83.0 libopencv-contrib410 zip && \
     apt-get clean
 
 # Build-specific
 RUN apt-get update && \
-    apt-get install -y libyaml-cpp-dev make g++ libopencv-dev unzip libboost-system-dev libboost-filesystem-dev && \
+    apt-get install -y git libyaml-cpp-dev make g++ libopencv-dev unzip libboost-system-dev libboost-filesystem-dev && \
     apt-get clean
 
-ADD p2g.tar.xz /p2g
+RUN git clone --depth 1 https://github.com/lhartmann/p2g /p2g
 WORKDIR /p2g
 RUN make -j$(nproc)
+RUN rm -rf /p2g/html/presets
 RUN strip p2g
 
 # Runner container
@@ -23,7 +24,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Recife
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
-    apt-get install -y curl gerbv libopencv-core406 libopencv-imgproc406 libyaml-cpp0.7 libboost-filesystem1.74.0 libopencv-contrib406 zip && \
+    apt-get install -y curl gerbv libopencv-core410 libopencv-imgproc410 libyaml-cpp0.8 libboost-filesystem1.83.0 libopencv-contrib410 zip && \
     apt-get clean
 
 # Run-specific setings
