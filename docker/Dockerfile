@@ -32,7 +32,8 @@ COPY --from=builder /p2g/p2g /p2g/rp2g-server.ts /usr/local/bin/
 COPY --from=builder /p2g/html /usr/share/rp2g
 COPY --from=builder /p2g/presets /usr/share/rp2g/presets
 COPY entrypoint.sh /entrypoint.sh
-#RUN chmod a+rX,go-w -R /usr/share/rp2g
+RUN chmod a+x /entrypoint.sh
+RUN chmod a+rX,go-w -R /usr/share/rp2g
 
 EXPOSE 8644
 CMD /entrypoint.sh
