@@ -1,0 +1,53 @@
+<!doctype html>
+<html ng-app="MyApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=300px, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+	<script src="rp2g.js"></script>
+	<script src="code.js"></script>
+</head>
+
+<body ng-controller="PCB2Gcode_Controller as P" class="program">
+	<div>
+		<div class="w3-panel w3-green">
+			<h1>Step 1: Process Configuration</h1>
+		</div>
+		<span ng-repeat="(key,value) in presets">
+			&nbsp; <span class="w3-card w3-button w3-green" ng-click="load_config(key)"> {{value}} </span>
+		</span>
+	</div>
+	
+	<div ng-if="step2.enabled">
+		<div class="w3-panel w3-green">
+			<h1> Step 2: Input Selection</h1>
+		</div>
+		<span ng-repeat="(key,value) in conf.inputs">
+			&nbsp; <span ng-class="classes_for_input(key)" ng-click="load_input(key)"> {{key}} </span>
+		</span>
+	</div>
+	
+	<div ng-if="step3.enabled">
+		<div class="w3-panel w3-green">
+			<h1> Step 3: Processing</h1>
+		</div>
+		&nbsp;<span class="w3-card w3-button w3-green" ng-click="start_processing()">Start Processing</span>
+		<pre>{{logs}}</pre>
+	</div>
+
+	<div ng-if="step4.enabled">
+		<div class="w3-panel w3-green">
+			<h1> Step 4: Download results</h1>
+		</div>
+		<span ng-repeat="(key,value) in results">
+			&nbsp; <span class="w3-card w3-button w3-green" ng-click="save_result(key)"> {{key}} </span>
+		</span>
+		&nbsp;
+	</div>
+</body>
+
+</html>
+
