@@ -280,9 +280,10 @@ Deno.serve({ port: args.port, hostname: "0.0.0.0" }, async (req) => {
 		if (pathname === "/") {
 			url = args.webroot + "/index.html";
 		}
-		console.log("URL", url);
 		try {
 			url = await Deno.realPath(url);
+			console.log("URL...:", url);
+			console.log("ROOT..:", args.webroot);
 			if (!url.startsWith(args.webroot)) {
 				return new Response("Forbidden", { status: 403 });
 			} else {
