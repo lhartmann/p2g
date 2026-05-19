@@ -1,16 +1,18 @@
 #include <pcb2gcode.hpp>
 
-namespace pcb2gcode {
-
-points_t simplify_path(const points_t &src, double tol) {
-    using std::min;
-
-    const auto triarea = [](point_t a, point_t b, point_t c) -> int64_t {
+namespace {
+    int64_t triarea(pcb2gcode::point_t a, pcb2gcode::point_t b, pcb2gcode::point_t c) {
         int64_t A =
             + (int64_t(a.x) - int64_t(c.x)) * (int64_t(b.y) - int64_t(a.y))
             - (int64_t(a.x) - int64_t(b.x)) * (int64_t(c.y) - int64_t(a.y));
         return A >= 0 ? +A : -A;
     };
+}
+
+namespace pcb2gcode {
+
+points_t simplify_path(const points_t &src, double tol) {
+    using std::min;
 
     // Reduce path keeping only:
     points_t res;
@@ -55,9 +57,31 @@ points_t simplify_path(const points_t &src, double tol) {
     return res;
 }
 
+// Visvalingam-Whyatt
+points_t simplify_path_vw(points_t points, double tol) {
+    while (points.size() > 2) {
+        size_t least_i = 1;
+        double least_err = +INFINITY;
+
+        for (size_t i=1; i<points.size()-1; i++) {
+            double err = triarea(points[i-1], points[i], points[i+1]);
+            if (err < least_err) {
+                least_err = err;
+                least_i = i;
+            }
+        }
+
+        if (least_err > tol)
+            break;
+
+        points.erase(points.begin() + least_i);
+    }
+    return points;
+}
+
 path_t simplify_path(const path_t &src, double tol) {
     path_t r = src.metacopy();
-    r.points = simplify_path(src.points, tol);
+    r.points = simplify_path_vw(src.points, tol);
     return r;
 }
 
