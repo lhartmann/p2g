@@ -10,7 +10,7 @@ gerbv --version || {
 
 # Install DENO, if not done via Dockerfile
 deno --version || {
-    URL=https://github.com/denoland/deno/releases/download/v1.22.3/deno-x86_64-unknown-linux-gnu.zip
+    URL=https://github.com/denoland/deno/releases/download/v2.7.14/deno-x86_64-unknown-linux-gnu.zip
     DENO=/usr/local/bin/deno
 
     curl -L $URL | zcat > $DENO
