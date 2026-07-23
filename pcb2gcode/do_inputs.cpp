@@ -1,8 +1,8 @@
 #include <pcb2gcode.hpp>
-#include <boost/asio/io_context.hpp>
-#include <boost/process.hpp>
 #include <boost/format.hpp>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/wait.h>
 
 namespace pcb2gcode {
 
@@ -20,7 +20,6 @@ cv::Mat load_gerber(std::string infile, cv::Rect2d bounds, double ppmm) {
     if (access(infile.c_str(), R_OK) == -1)
         return {};
 
-    namespace bp = boost::process;
     std::string tmpfile = infile;
     for (auto &c : tmpfile)
         if (!isalnum(c)) c = '_';
@@ -30,30 +29,41 @@ cv::Mat load_gerber(std::string infile, cv::Rect2d bounds, double ppmm) {
     else
         tmpfile = "./p2g-debug-out/pcb2gcode-" + infile + ".png";
 
-    auto gerbv = bp::environment::find_executable("gerbv");
-    if (gerbv.empty())
-        throw error("gerbv not found.");
+    int pid = fork();
+    if (pid < 0) throw error("Fork failed.");
+    if (!pid) {
+        int devnull = open("/dev/null", O_RDWR);
+        if (devnull < 0) exit(1);
+        dup2(devnull, STDIN_FILENO);
+        dup2(devnull, STDOUT_FILENO);
+        dup2(devnull, STDERR_FILENO);
 
-    boost::asio::io_context ctx;
-    int ret = bp::process(
-        ctx,
-        gerbv,
-        {
-            "-D", str(boost::format("%f") % int(25.4 * ppmm)),
+        auto origin = str(boost::format("--origin=%06fx%06f") % (bounds.x / 25.4) % (bounds.y / 25.4));
+        auto window = str(boost::format("--window_inch=%06fx%06f") % (bounds.width / 25.4) % (bounds.height / 25.4));
+
+        const char *args[] = {
+            "gerbv",
+            "-D", str(boost::format("%f") % int(25.4 * ppmm)).c_str(),
             "-x", "png",
             "-b", "#000000",
             "-f", "#FFFFFFFF",
-            str(boost::format("--origin=%06fx%06f") % (bounds.x / 25.4) % (bounds.y / 25.4)),
-            str(boost::format("--window_inch=%06fx%06f") % (bounds.width / 25.4) % (bounds.height / 25.4)),
-            "-o", tmpfile,
-            infile
-        },
-        bp::process_environment{{"LC_ALL", "C"}},
-        // stdio layout: {stdin, stdout, stderr}. nullptr routes output to /dev/null
-        bp::process_stdio{ {}, nullptr, nullptr }
-    ).wait();
+            origin.c_str(),
+            window.c_str(),
+            "-o", tmpfile.c_str(),
+            infile.c_str(),
+            0
+        };
+        const char *env[] = {
+            "LC_ALL=C",
+            0
+        };
 
-    if (ret)
+        execvpe("gerbv", (char**)args, (char**)env);
+        exit(1);
+    }
+
+    int ret=0;
+    if (waitpid(pid, &ret, 0)<0 || ret)
         throw error("gerbv failed.");
 
     cv::Mat image = load_image(tmpfile);
