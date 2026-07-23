@@ -1,4 +1,5 @@
 #include <pcb2gcode.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/process.hpp>
 #include <boost/format.hpp>
 #include <unistd.h>
@@ -29,18 +30,29 @@ cv::Mat load_gerber(std::string infile, cv::Rect2d bounds, double ppmm) {
     else
         tmpfile = "./p2g-debug-out/pcb2gcode-" + infile + ".png";
 
-    auto gerbv = bp::search_path("gerbv");
+    auto gerbv = bp::environment::find_executable("gerbv");
     if (gerbv.empty())
         throw error("gerbv not found.");
 
-    int ret = bp::system(gerbv, boost::process::env["LC_ALL"]="C",
-        "-D", str(boost::format("%f") % int(25.4*ppmm)),
-        "-x",  "png", "-b", "#000000", "-f", "#FFFFFFFF",
-        str(boost::format("--origin=%06fx%06f") % (bounds.x / 25.4) % (bounds.y / 25.4)),
-        str(boost::format("--window_inch=%06fx%06f") % (bounds.width / 25.4) % (bounds.height / 25.4)),
-        "-o", tmpfile , infile,
-        bp::std_out > "/dev/null", bp::std_err > "/dev/null"
-    );
+    boost::asio::io_context ctx;
+    int ret = bp::process(
+        ctx,
+        gerbv,
+        {
+            "-D", str(boost::format("%f") % int(25.4 * ppmm)),
+            "-x", "png",
+            "-b", "#000000",
+            "-f", "#FFFFFFFF",
+            str(boost::format("--origin=%06fx%06f") % (bounds.x / 25.4) % (bounds.y / 25.4)),
+            str(boost::format("--window_inch=%06fx%06f") % (bounds.width / 25.4) % (bounds.height / 25.4)),
+            "-o", tmpfile,
+            infile
+        },
+        bp::process_environment{{"LC_ALL", "C"}},
+        // stdio layout: {stdin, stdout, stderr}. nullptr routes output to /dev/null
+        bp::process_stdio{ {}, nullptr, nullptr }
+    ).wait();
+
     if (ret)
         throw error("gerbv failed.");
 
