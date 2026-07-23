@@ -6,7 +6,7 @@ OBJECTS = $(patsubst %.cpp,%.o,$(SRCS))
 
 CXXFLAGS += $(shell pkg-config --cflags opencv4 yaml-cpp)
 LDFLAGS += $(shell pkg-config --libs opencv4 yaml-cpp)
-LDFLAGS += -lpthread -lboost_process -lboost_filesystem
+LDFLAGS += -lpthread -lboost_filesystem
 
 CFLAGS += -I$(PWD) -O3
 CXXFLAGS += -I$(PWD) -O3 -std=c++20
